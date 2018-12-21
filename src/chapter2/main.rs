@@ -1,3 +1,7 @@
+/*
+In this chapter we built a guessing game which makes use of the rand crate.
+*/
+
 use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
