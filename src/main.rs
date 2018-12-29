@@ -1,46 +1,23 @@
-fn loops(num_times: i32) {
-    let mut counter = 0;
-    let a = [10, 20, 30, 40, 50];
-
-    loop {
-        if counter == num_times {
-            break;
-        }
-
-        println!("I love crab rangoons!");
-        counter += 1;
-    }
-
-    while counter < 4 {
-        println!("More love!");
-        counter += 1;
-    }
-
-    for element in a.iter() {
-        println!("the value is: {}", element);
-    }
+// Just gonna rip out a paragraph from the book:
+//
+// "Some languages have garbage collection that constantly looks for no longer used
+// memory as the program runs; in other languages, the programmer must explicitly
+// allocate and free the memory. Rust uses a third approach: memory is managed
+// through a system of ownership with a set of rules that the compiler checks at
+// compile time."
+//
+// The first approach is like JS, the second like C, while Rust introduces ownership.
+fn count_rangoons(num_rangoons: i32) {
+    // num_rangoons is in this function's scope. It is stored on the stack when it's
+    // scope then popped off when it is no longer in scope. This behavior is mirrored
+    // in the other immutable primitive data types.
+    println!("{} rangoons", num_rangoons);
 }
 
 fn main() {
-    let x = 10;
+    let mut s = String::from("something");
+    s.push_str(", world!");
 
-    // The condition must be a bool. No type casting like JS or Ruby.
-    if x > 5 {
-        println!("This will always be true.");
-    } else if x == 3 {
-        println!("Not getting here.");
-    } else {
-        println!("We're never getting here.");
-    }
-
-    // Ifs behave like Ruby. In Rust, ifs are an expression.
-    let y = if x > 12 {
-        0 // These expressions have to match type.
-    } else {
-        3 // This one can't be a string while the other is an int.
-    };
-
-    println!("{} y's", y);
-
-    loops(y);
+    println!("{}", s);
+    count_rangoons(4);
 }
