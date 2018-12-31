@@ -15,7 +15,6 @@ fn main() {
     let string = String::from("bacon and cheese");
     let string2 = "crab rangoon";
 
-    // We have the
     let first = first_word(&string);
     let first2 = first_word(&string2);
 
