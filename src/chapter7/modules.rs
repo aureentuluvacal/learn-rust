@@ -5,3 +5,5 @@
 // I can access parent module contents but not child module contents.
 // Adding "pub" to structs makes the struct public but not its fields.
 // Adding "pub" to enums makes its variants public as well.
+
+// "use" imports a module's content based on it's path within the hierarchy.
