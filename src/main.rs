@@ -1,30 +1,47 @@
+// We can use the Result enum to handle recoverable errors, like trying to write
+// to a file that doesn't exist.
+
+use std::fs::File;
+use std::io;
+use std::io::ErrorKind;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f = File::open("hello.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
+}
+
 fn main() {
-    // Vectors hold values of the same type that are stored
-    // next to each other in memory. This makes them fast.
-    // Useful when we have a list of items.
-    let mut v: Vec<i32> = Vec::new();
-    v.push(100);
-    v.push(4);
+    let f = File::open("hello.txt");
 
-    // Can also use vec macro that infers the type.
-    let macro_v = vec![1, 2, 3];
+    // Handle the error with a match, which isn't as sexy as using closures and unwrap_or_else.
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!(
+                    "Tried to create file but there was a problem: {:?}",
+                    e
+                ),
+            },
+            other_error => panic!(
+                "There was a problem opening the file: {:?}",
+                other_error
+            ),
+        },
+    };
 
-    match v.get(2) {
-        Some(third) => println!("The third element of vector 2 is: {}", third),
-        None => println!("Ain't no third here")
-    }
-
-    // This will crash the program if the element we're accessing doesn't exist.
-    // Also it is an immutable reference to a mutable object. We can't add more
-    // values to it.
-    let third : &i32 = &macro_v[2]; 
-
-    println!("The third element of vector 2 is: {}", third);
-    for i in &v {
-        println!("{}", i);
-    }
-
-    for i in &mut v {
-        *i += 50;
-    }
-} // When a vector goes out of scope, it and its contents are dropped.
+    // Or handle by propogating error to the what is calling the code.
+}
