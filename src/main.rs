@@ -6,6 +6,8 @@ use std::io;
 use std::io::ErrorKind;
 use std::io::Read;
 
+// This way we manually handle errors and return early if there's an error reading
+// the file.
 fn read_username_from_file() -> Result<String, io::Error> {
     let f = File::open("hello.txt");
 
@@ -20,6 +22,18 @@ fn read_username_from_file() -> Result<String, io::Error> {
         Ok(_) => Ok(s),
         Err(e) => Err(e),
     }
+}
+
+// This way uses ? which short circuits the function if any errors occur,
+// implicitly returning early if an error is encountered. Can only be used with
+// functions that return a Result.
+fn read_username_from_file_with_question_mark() -> Result<String, io::Error> {
+    // fs::read_to_string("hello.txt") <-- can be boiled down to just that at the end
+    // of the day.
+    let mut f = File::open("hello.txt")?;
+    let mut s = String::new();
+    f.read_to_string(&mut s)?;
+    Ok(s)
 }
 
 fn main() {
@@ -43,5 +57,7 @@ fn main() {
         },
     };
 
-    // Or handle by propogating error to the what is calling the code.
+    // Or handle by propogating error to what is calling the code.
+    let result = read_username_from_file();
+    print!("{:?}", result);
 }
