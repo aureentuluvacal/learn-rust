@@ -1,42 +1,28 @@
-#[derive(Debug)]
-pub struct Rectangle {
-    length: u32,
-    width: u32,
+use std::error::Error;
+use std::fs;
+
+pub struct Config {
+    pub query: String,
+    pub filename: String,
 }
 
-impl Rectangle {
-    pub fn can_hold(&self, other: &Rectangle) -> bool {
-        self.length > other.length && self.width > other.width
+impl Config {
+    pub fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
+
+        let query = args[1].clone();
+        let filename = args[2].clone();
+
+        Ok(Config { query, filename })
     }
 }
 
-pub fn add_two(a: i32) -> i32 {
-    a + 2
-}
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(config.filename)?;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    println!("With text:\n{}", contents);
 
-    #[test]
-     fn larger_can_hold_smaller() {
-        let larger = Rectangle { length: 8, width: 7 };
-        let smaller = Rectangle { length: 5, width: 1 };
-
-        assert!(larger.can_hold(&smaller));
-    }
-
-    #[test]
-    fn smaller_cannot_hold_larger() {
-        let larger = Rectangle { length: 8, width: 7 };
-        let smaller = Rectangle { length: 5, width: 1 };
-
-        assert!(!smaller.can_hold(&larger));
-    }
-
-    #[test]
-    #[ignore] // We can ignore tests
-    fn it_adds_two() {
-        assert_eq!(4, add_two(2));
-    }
+    Ok(())
 }
