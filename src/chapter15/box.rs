@@ -1,6 +1,9 @@
 // Strings and vectors are smart pointers. They own the data that they are
 // pointing to. Smart pointers also have metadata like Strings ensuring that
 // they're always UTF-8 characters. They also implement the Dref and Drop traits.
+// Box<T> allows immutable or mutable borrows checked at compile time; Rc<T> 
+// allows only immutable borrows checked at compile time; RefCell<T> allows
+// immutable or mutable borrows checked at runtime.
 
 enum List {
     Cons(i32, Box<List>),
